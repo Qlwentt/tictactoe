@@ -5,8 +5,8 @@ class Board:
         self.state = [[None, None, None], [None, None, None], [None, None, None]]
         self.validMoves = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
         self.winTally = {
-            'rows': [0] * BOARD_SIZE,
-            'cols': [0] * BOARD_SIZE,
+            'rows': [0, 0, 0],
+            'cols': [0, 0, 0],
             'diagx': 0,
             'diagy': 0,
         }
