@@ -1,12 +1,13 @@
 from src.constants.constants import BOARD_SIZE
+from src.enums.valid_positions import VALID_POSITIONS
 
 class Board:
     def __init__(self) -> None:
         self.state = [[None, None, None], [None, None, None], [None, None, None]]
         self.validMoves = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
         self.winTally = {
-            'rows': [0, 0, 0],
-            'cols': [0, 0, 0],
+            'rows': [0] * BOARD_SIZE,
+            'cols': [0] * BOARD_SIZE,
             'diagx': 0,
             'diagy': 0,
         }
@@ -34,6 +35,17 @@ class Board:
             self.winTally['diagx'] += tally
         if x + y == BOARD_SIZE - 1:
             self.winTally['diagy'] += tally
+    
+    def undoMove(self, move, tally):
+        x, y = VALID_POSITIONS[move]
+        self.state[x][y] = None
+        self.validMoves[x][y] = move
+        self.winTally['rows'][x] -= tally
+        self.winTally['cols'][y] -= tally
+        if x == y:
+            self.winTally['diagx'] -= tally
+        if x + y == BOARD_SIZE - 1:
+            self.winTally['diagy'] -= tally
 
     def getWinnerTallys(self):
         results = [

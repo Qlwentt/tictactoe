@@ -1,1 +1,2 @@
-import testing.testMinimax
+import testing.testOpenAI
+# 96% accuracy

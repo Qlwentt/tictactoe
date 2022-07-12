@@ -1,4 +1,5 @@
 import copy
+from src.openai import OpenAI
 
 from src.player import Player
 from src.board import Board
@@ -21,6 +22,7 @@ class Game:
         self.board = Board()
         self.isPlayer1Turn = True
         self.computer = Computer(self.player2, self.player1) if not self.isTwoPlayerGame() else None
+
 
     def say(message):
         print(message)
@@ -83,10 +85,27 @@ class Game:
                 move = randomAI.makeMove(self)
             self.board.markMove(VALID_POSITIONS[move],player.mark, player.tally)
             self.updateTurn()
+            return VALID_POSITIONS[move]
+        elif self.gameMode == GameMode.OPENAI_VS_RANDOM:
+            player = self.player1 if self.isPlayer1Turn else self.player2
+            if player.name == 'OpenAI':
+                openAI = OpenAI()
+                move = openAI.makeMove(self)
+                self.board.markMove(VALID_POSITIONS[move],player.mark, player.tally)
+            else:
+                randomAI = RandomAI()
+                move = randomAI.makeMove(self)
+                self.board.markMove(VALID_POSITIONS[move],player.mark, player.tally)
+            self.updateTurn()
+
 
     def makeTheoreticalMove(self, move, player):
         self.board.markMove(VALID_POSITIONS[move], player.mark, player.tally)
-        
+        self.updateTurn()
+
+    def undoMove(self,move, player):
+        self.board.undoMove(move, player.tally)  
+        self.updateTurn()
 
     def getWinner(self):
         winTally = self.board.getWinnerTallys()
