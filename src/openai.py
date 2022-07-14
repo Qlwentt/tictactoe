@@ -1,5 +1,6 @@
 import os
 import openai
+import json
 
 from src.enums.valid_positions import VALID_COORDINATES
 
@@ -20,8 +21,5 @@ class OpenAI:
             )
         
         move = response.choices[0].text.strip()
-        move = move[1:-1]
-        move = move.split(",")
-        move = [int(x) for x in move]
-        assert(len(move) == 2)
+        move = json.loads(move)
         return VALID_COORDINATES[tuple(move)]
